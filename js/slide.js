@@ -59,10 +59,48 @@ export default class Slide{
         this.updatePosition = this.updatePosition.bind(this);
     }
 
+    //pega a posicao exata que a imagem deve se mover para ficar centralizado na tela.
+    slidePosition(slide){
+        //pega a margem esquerda da imagem para que ela fique centralizada na tela
+        const margin = (this.wrapper.offsetWidth - slide.offsetWidth) / 2;
+
+        //margemEsquerda - distanciaDaImagemParaBordaDaEsquerda
+        return margin - slide.offsetLeft;
+    }
+
+    /* retorna um array com objetos que contem o slide e o quanto ele deve se mover para ficar no centro da tela */
+    slidesConfig(){
+        /* Desestrutura this.slide.children (li's), os coloca dentro de um array e da o map */
+        this.slideArray = [...this.slide.children].map((element)=>{
+            const position = this.slidePosition(element);;
+            return {
+                element,
+                position,
+            }
+        });;
+    }
+
+    slideIndexNav(index){
+        const last = this.slideArray.length - 1;
+        this.index = {
+            prev: index ? index - 1 : 0,
+            active: index,
+            next: index >= last ? last : index + 1,
+        }
+    }
+
+    changeSlide(index){
+        const activeSlide = this.slideArray[index];
+        this.moveSlide(activeSlide.position);
+        this.dist.finalPosition = activeSlide.position;
+        this.slideIndexNav(index);
+        console.log(this.index);
+    }
+
     init(){
         this.bindEvents();
         this.addSlideEvents();
-
+        this.slidesConfig();
         return this;
     }
 }
