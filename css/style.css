@@ -1,0 +1,34 @@
+body{
+    margin: 0;
+}
+
+ul{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+img{
+    display:block;
+    max-width: 100%;
+}
+
+.slide-wrapper{
+    overflow: hidden;
+}
+
+.slide{
+    display: flex;
+}
+
+.slide li{
+    flex-shrink: 0;
+    width: 80vw;        /* 80% da tela */
+    max-width: 800px;
+    margin: 0 20px;
+}
+
+/*  isso munda a posicao do bloco. Eixo x, eixo y, eixo z.
+.slide{
+    transform: translate3d(0px, 0px, 0px);
+} */
