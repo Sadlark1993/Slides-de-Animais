@@ -161,6 +161,20 @@ export class SlideNav extends Slide {
         this.prevButton = prevButton;
         this.nextButton = nextButton;
     }
+
+    //override
+    changeSlide(index){
+        this.transition(true);
+        const activeSlide = this.slideArray[index];
+        this.moveSlide(activeSlide.position);
+        this.dist.finalPosition = activeSlide.position;
+        this.slideIndexNav(index);
+        this.changeActiveClass();
+
+        /* Ao inves de usar esse meu metodo, o professor criou um novo evento
+        veja o codigo do provessor se quiser saber mais (changeEvent).  */
+        this.selectCurrentControl();
+    }
     
     //botoes next e prev
     addArrow(prev, next){
@@ -172,11 +186,42 @@ export class SlideNav extends Slide {
         nextElement.addEventListener('click', this.activeNextSlide);
     }
 
+    /* remove todas as classes 'active' dos icones de navegacao (control)*/
+    removeControlActiveClasses(){
+        this.controlArray.forEach((li) => {
+            li.firstChild.classList.remove('active');
+        });
+    }
+
+    /* cria links de controle para selecionar qual slide deve ficar ativo */
+    createControl(){
+        const control = document.createElement('ul');
+        control.dataset.control = 'slide';
+        this.slideArray.forEach((item, index) => {
+            control.innerHTML += `<li><a href="#slide${index+1}">${index+1}</a></li>`;
+        });
+        this.wrapper.appendChild(control);
+        this.controlArray = [...control.children];
+        this.controlArray.forEach((li, index) => {
+            li.firstChild.addEventListener('click', (event) => {
+                event.preventDefault();
+                this.changeSlide(index);
+            });
+        });
+    }
+
+    //adiciona a classe 'active' no controle do slide atual. So vai ser executado no carregamento da pg.
+    selectCurrentControl(){
+        this.removeControlActiveClasses();
+        this.controlArray[this.index.active].firstChild.classList.add('active');
+    }
+
     //override
     init(){
         this.bindEvents();
         this.addSlideEvents();
         this.slidesConfig();
+        this.createControl();
         this.changeSlide(0);
         this.addArrow(this.prevButton, this.nextButton);
         return this;
