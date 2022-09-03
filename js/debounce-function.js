@@ -31,5 +31,9 @@ export default function debounce(callback, delay){
 
     const debouncedScroll = debounce(callbackFunction, 200); 
     element.addEventListener('<event>', debouncedScroll);  
+
+    ou
+
+    this.metodo = debounce(this.metodo.bind(this), 200);
       
 */

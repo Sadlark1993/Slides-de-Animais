@@ -1,7 +1,9 @@
+import debounce from './debounce-function.js'
 export default class Slide{
     constructor(slide, wrapper){
         this.slide = document.querySelector(slide);
         this.wrapper = document.querySelector(wrapper);
+        this.activeClass = 'active';
 
         this.dist = {
             finalPosition: 0,
@@ -66,14 +68,10 @@ export default class Slide{
         this.wrapper.addEventListener('mouseup', this.onEnd);
         this.wrapper.addEventListener('touchstart', this.onStart);
         this.wrapper.addEventListener('touchend', this.onEnd);
+        window.addEventListener('resize', this.onResize);
     }
 
-    bindEvents(){
-        this.onStart = this.onStart.bind(this);
-        this.onMove = this.onMove.bind(this);
-        this.onEnd = this.onEnd.bind(this);
-        this.updatePosition = this.updatePosition.bind(this);
-    }
+    
 
     //pega a posicao exata que a imagem deve se mover para ficar centralizado na tela.
     slidePosition(slide){
@@ -84,16 +82,17 @@ export default class Slide{
         return margin - slide.offsetLeft;
     }
 
-    /* retorna um array com objetos que contem o slide e o quanto ele deve se mover para ficar no centro da tela */
+    /* cria um array com objetos que contem o slide e o quanto ele deve se mover para ficar no centro da tela */
     slidesConfig(){
         /* Desestrutura this.slide.children (li's), os coloca dentro de um array e da o map */
         this.slideArray = [...this.slide.children].map((element)=>{
-            const position = this.slidePosition(element);;
+            const position = this.slidePosition(element);
             return {
                 element,
                 position,
             }
         });;
+
     }
 
     slideIndexNav(index){
@@ -105,13 +104,20 @@ export default class Slide{
         }
     }
 
+    changeActiveClass(){
+        this.slideArray.forEach((item)=>{
+            item.element.classList.remove(this.activeClass);
+        });
+        this.slideArray[this.index.active].element.classList.add(this.activeClass);
+    }
+
     changeSlide(index){
         this.transition(true);
         const activeSlide = this.slideArray[index];
         this.moveSlide(activeSlide.position);
         this.dist.finalPosition = activeSlide.position;
         this.slideIndexNav(index);
-        console.log(this.index);
+        this.changeActiveClass();
     }
 
     activePrevSlide(){
@@ -120,6 +126,23 @@ export default class Slide{
 
     activeNextSlide(){
         if(this.index.next !== undefined) this.changeSlide(this.index.next);
+    }
+
+    bindEvents(){
+        this.onStart = this.onStart.bind(this);
+        this.onMove = this.onMove.bind(this);
+        this.onEnd = this.onEnd.bind(this);
+        this.updatePosition = this.updatePosition.bind(this);
+        this.onResize = debounce(this.onResize.bind(this),200);
+    }
+
+    onResize(){
+        console.log('retamanhou');
+        setTimeout(()=>{
+            this.slidesConfig();
+            this.changeSlide(this.index.active);
+        }, 1000);
+
     }
 
     init(){

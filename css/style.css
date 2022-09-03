@@ -21,11 +21,27 @@ img{
     display: flex;
 }
 
+.slide:hover{
+    will-change: transform; /* informa ao navegador o que vai mudar. Melhora a performance. */
+}
+
 .slide li{
     flex-shrink: 0;
     width: 80vw;        /* 80% da tela */
     max-width: 800px;
     margin: 0 20px;
+
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    opacity: 0.8;
+    transform: scale(.8);
+    transition: .4s;
+}
+
+.slide li.active{
+    opacity: 1;
+    transform: scale(1);
 }
 
  /* isso munda a posicao do bloco. Eixo x, eixo y, eixo z. */
