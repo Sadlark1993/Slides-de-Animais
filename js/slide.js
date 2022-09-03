@@ -155,11 +155,12 @@ export class Slide{
     }
 }
 
-export class SlideNav extends Slide {
-    constructor(slide, wrapper, prevButton, nextButton){
+export default class SlideNav extends Slide {
+    constructor(slide, wrapper, prevButton, nextButton, customControl){
         super(slide, wrapper); //chama o construtor da classe pai
         this.prevButton = prevButton;
         this.nextButton = nextButton;
+        this.customControl = customControl;
     }
 
     //override
@@ -195,12 +196,17 @@ export class SlideNav extends Slide {
 
     /* cria links de controle para selecionar qual slide deve ficar ativo */
     createControl(){
-        const control = document.createElement('ul');
+        let control;
+        if(!this.customControl){
+            control = document.createElement('ul');
+            this.slideArray.forEach((item, index) => {
+                control.innerHTML += `<li><a href="#slide${index+1}">${index+1}</a></li>`;
+            });
+            this.wrapper.appendChild(control);
+        }else{
+            control = document.querySelector(this.customControl);
+        }
         control.dataset.control = 'slide';
-        this.slideArray.forEach((item, index) => {
-            control.innerHTML += `<li><a href="#slide${index+1}">${index+1}</a></li>`;
-        });
-        this.wrapper.appendChild(control);
         this.controlArray = [...control.children];
         this.controlArray.forEach((li, index) => {
             li.firstChild.addEventListener('click', (event) => {

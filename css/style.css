@@ -69,3 +69,56 @@ img{
 [data-control="slide"] li a.active, [data-control="slide"] li a:hover{
     background: #E54;
 }
+
+.custom-control{
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.custom-control li img{
+    opacity: 0.8;
+    transform: scale(0.8);
+    height: 40px;
+    width: 40px;
+    border-radius: 50px;
+    margin: 2px;
+    box-shadow: 0 2px, 2px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s;
+    cursor:pointer;
+}
+
+.custom-control li img:hover, .custom-control li img.active{
+    opacity: 1;
+    transform: scale(1);
+}
+
+.arrow-buttons{
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+}
+
+.arrow-buttons button{
+    border-radius: 5px;
+    background: #FB5 url('../img/arrow.svg') center center no-repeat;
+    cursor: pointer;
+    width: 40px;
+    height: 20px;
+    border: none;
+    transform: scale(1);
+}
+
+.arrow-buttons button.next:hover{
+    transform: scale(1.3);
+}
+
+.arrow-buttons button.prev{
+    transform: rotate(180deg);
+}
+
+.arrow-buttons button.prev:hover{
+    transform: rotate(180deg) scale(1.3);
+}
